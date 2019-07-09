@@ -1,0 +1,46 @@
+- name: partion + mountage disk
+  hosts: localhost
+  gather_facts: yes
+  become: true
+  become_method: sudo
+
+  vars_files:
+
+         # - defaults/main.yml
+
+  tasks:
+
+
+            - name: Create a new primary partition with a size 32Gib
+              parted:
+                device: /dev/sdc
+                number: 1
+                state: present
+                part_start: 32GiB
+
+            - name: partition
+              shell: (echo n; echo p; echo 1; echo ; echo ; echo w) | sudo fdisk /dev/sdc
+
+#            - name: Mount up device by UUID
+#              mount:
+#                path: /home
+#                src: "{{ UUID }}"
+#                fstype: xfs
+#                opts: noatime
+#                state: present
+
+            - name: file systeme 
+              shell: mkfs -t ext4 /dev/sdc1
+
+            - name: Creates directory
+              file:
+                path: /datadrive
+                state: directory
+
+
+            - name: Mount up device 
+              mount:
+                path: /datadrive
+                src: /dev/sdc
+                fstype: ext4
+                state: present

@@ -1,0 +1,21 @@
+
+fs_uuid=$(blkid -o value -s UUID /dev/sdb1)
+fs_uuid=$(lsblk -no UUID /dev/sdb1)
+fs_uuid=$(udevadm info -n sdb1 -q property | sed -n 's/^ID_FS_UUID=//p')
+fs_uuid=$(find /dev/disk/by-uuid -lname '*/sdb1' -printf %f)
+
+
+find /dev/disk/by-uuid -lname '*/sdc1' -printf %f
+
+
+findmnt -fn -o UUID /dev/sdb1
+
+UUID=74685c0b-1d0e-484b-a0f0-fb0700125278       /datadrive    ext4    defaults,nofail   1   2
+
+UUID="{{ UUID }}"       /"{{mount_point}}"    ext4    defaults,nofail   1   2
+
+
+- name: Creates directory
+  file:
+    path: /src/www
+    state: directory
